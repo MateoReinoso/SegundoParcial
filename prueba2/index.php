@@ -10,6 +10,28 @@
         exit;
     }
 ?>
+<!-- comprobacion -->
+<?php 
+    $conex = mysqli_connect("127.0.0.1", "root", "", "tienda");
+
+    if (!$conex) {
+        echo "<p>Error: No se pudo conectar a MySQL." . PHP_EOL;
+        echo "errno de depuración: " . mysqli_connect_errno() . PHP_EOL;
+        echo "error de depuración: " . mysqli_connect_error() . PHP_EOL;
+        echo "</p>";
+        exit;
+    }
+if(isset($_POST["Nombre"])){
+    $stmt = $conex->prepare("INSERT INTO productos (Nombre, Cantidad, CostUnit, CostTot) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param('sidd',$Nombre, $Cantidad, $CostUnit, $CostTot);
+    $Nombre = $_POST["nombre"];
+    $Cantidad = $_POST["cantidad"];
+    $CostUnit = $_POST["costUnit"];
+    $CostTot = $_POST["costTot"];
+    $stmt->execute();
+    $stmt->close();
+}
+?>
 <!-- empieza html -->
 <!DOCTYPE html>
 <html lang="en">
@@ -45,7 +67,7 @@
     <header class="masthead bg-primary text-white text-center">
         <div class="container d-flex align-items-center flex-column">
             <!-- Masthead Avatar Image-->
-            <img class="masthead-avatar mb-5" src="assets/img/portfolio/tienda-ico.png" alt="" />
+            <img class="masthead-avatar mb-5" src="assets/img/portfolio/tienda-ico.png" width="450" height="450" />
             <!-- Masthead Heading-->
             <h1 class="masthead-heading text-uppercase mb-0">La mejor tienda de su localidad</h1>
             <!-- Icon Divider-->
@@ -70,6 +92,47 @@
                         <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
                         <div class="divider-custom-line"></div>
                     </div>
+                    <br>
+                    <div>
+                        <form name="forma" method="post" action="index.php">
+                            <table border="0">
+                                <div>
+                                    <td colspan=8><strong>Nuevo Producto</strong></td>
+                                </div>
+                                <br>
+                                <tr>
+                                    <td><label id="lblNombreProducto" for="nombre">Nombre Producto:</label></td>
+                                    <td><input type="text" name="nombre" value="" maxlength="30" size="30" required />
+                                    </td>
+                                </tr>
+                                <br>
+                                <tr>
+                                    <td><label id="lblCantidad" for="cantidad">Cantidad:</label></td>
+                                    <td><input type="text" name="cantidad" value="" maxlength="30" size="30" required />
+                                    </td>
+                                </tr>
+                                <br>
+                                <tr>
+                                    <td><label id="lblCostoUnitario" for="costUnit">Costo Unitario</label></td>
+                                    <td><input type="text" name="costUnit" value="" maxlength="30" size="30" required />
+                                    </td>
+                                </tr>
+                                <br>
+                                <tr>
+                                    <td><label id="lblCostoTotal" for="costTot">Costo Total</label></td>
+                                    <td><input type="text" name="costTot" value="" maxlength="30" size="30" required />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="submit" name="agregar" value="Agregar">
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </form>
+                    </div>
+                    <br>
                     <table border="5">
                         <tr>
                             <td>Codigo</td>
@@ -102,6 +165,7 @@
             </div>
 
         </div>
+
     </section>
 
 </body>
